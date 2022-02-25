@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import { v4 as uuid } from "uuid";
 
 import { ResourceState as Props } from "../../App";
 import Button from "../common/Button";
@@ -30,13 +31,23 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const value = inputRef.current?.value.trim();
+    let value = inputRef.current?.value.trim() || "";
+    // 아무것도 입력하지 않았다면 alert를 띄운다
     if (!value) {
       return alert("URL을 입력해 주세요.");
+    }
+    // http:// 혹은  https:// 로 시작하지 않는 경우 https:// 를 추가한다
+    if (!value.startsWith("http://") && !value.startsWith("https://")) {
+      value = "https://" + value;
+    }
+    // youtube url은 embed url로 변경해야 한다.
+    if (value.includes("youtube.com/watch?v=")) {
+      value = value.replace("watch?v=", "embed/");
     }
 
     setResources((prevResources) => {
       const newResource: Props["resource"] = {
+        id: uuid(),
         value,
         type: "url",
       };
