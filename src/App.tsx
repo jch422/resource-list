@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+
+import Sidebar from "./components/sidebar/Sidebar";
+
+export interface ResourceState {
+  resource: {
+    value: string;
+    type: "url" | "img";
+  };
+}
 
 function App() {
-  return <h1>hello</h1>;
+  const [resources, setResources] = useState<ResourceState["resource"][]>([]);
+
+  return (
+    <>
+      <Sidebar setResources={setResources} />
+    </>
+  );
 }
 
 export default App;
