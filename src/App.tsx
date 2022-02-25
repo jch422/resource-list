@@ -4,6 +4,7 @@ import Sidebar from "./components/sidebar/Sidebar";
 
 export interface ResourceState {
   resource: {
+    id: string;
     value: string;
     type: "url" | "img";
   };
@@ -14,7 +15,7 @@ function App() {
 
   return (
     <>
-      <Sidebar setResources={setResources} />
+      <Sidebar resources={resources} setResources={setResources} />
     </>
   );
 }
