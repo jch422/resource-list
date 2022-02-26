@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { ResourceState as Props } from "../../App";
 import Button from "../common/Button";
 import Overlay from "../common/Overlay";
+import ImgUpload from "./ImgUpload";
 
 interface SidebarHeadProps {
   setResources: React.Dispatch<React.SetStateAction<Props["resource"][]>>;
@@ -12,6 +13,7 @@ interface SidebarHeadProps {
 
 const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const imgUploadFormRef = useRef<HTMLInputElement>(null);
   const [showUrlInput, setShowUrlInput] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,20 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
     setShowUrlInput((show) => !show);
   };
 
-  const handleImgClick = (): void => {};
+  const handleImgClick = (): void => {
+    imgUploadFormRef.current?.click();
+  };
+
+  const handleImgUpload = (imgFileName: string): void => {
+    setResources((prevResources) => {
+      const newResource: Props["resource"] = {
+        id: uuid(),
+        value: imgFileName,
+        type: "img",
+      };
+      return [newResource, ...prevResources];
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -76,6 +91,7 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
           <Input ref={inputRef} />
         </InputForm>
       )}
+      <ImgUpload handleImgUpload={handleImgUpload} ref={imgUploadFormRef} />
     </>
   );
 };
