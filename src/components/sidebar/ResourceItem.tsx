@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
-import { ResourceState as Props } from "../../App";
+import { ResourceState as Props } from "../../app/App";
 import { TypedIcon } from "typed-design-system";
+
+import { handleUrl } from "../../utils/url";
+import { validateImgFileName } from "../../utils/img";
 
 interface ItemProps {
   resource: Props["resource"];
@@ -11,8 +14,8 @@ interface ItemProps {
 
 const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [editable, setEditable] = useState(false);
-  const [value, setValue] = useState(resource.value);
+  const [editable, setEditable] = useState<Boolean>(false);
+  const [value, setValue] = useState<string>(resource.value);
 
   useEffect(() => {
     if (editable && inputRef.current) {
@@ -22,13 +25,54 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
     }
   }, [editable]);
 
+  const handleItemClick = (): void => {
+    setResources((prevResources) => {
+      return prevResources.map((prevResource) => {
+        if (prevResource.id !== resource.id) {
+          return {
+            ...prevResource,
+            isClicked: false,
+          };
+        }
+        return {
+          ...prevResource,
+          isClicked: !resource.isClicked,
+        };
+      });
+    });
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
   };
 
-  const handleEditClick = (): void => setEditable(true);
+  const stopPropagation = (
+    e: React.MouseEvent<HTMLInputElement, MouseEvent>
+  ): void => {
+    e.stopPropagation();
+  };
 
-  const handleSaveClick = (): void => {
+  const handleEditClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    e.stopPropagation();
+    setEditable(true);
+  };
+
+  const handleSaveClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    e.stopPropagation();
+
+    let newValue = "";
+    if (resource.type === "url") {
+      newValue = handleUrl(value);
+    }
+    if (resource.type === "img") {
+      newValue = validateImgFileName(value) ? value.trim() : "";
+    }
+    if (!newValue) return;
+
     setResources((prevResources) => {
       return prevResources.map((prevResource) => {
         if (prevResource.id !== resource.id) {
@@ -36,19 +80,25 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
         }
         return {
           ...prevResource,
-          value,
+          value: newValue,
         };
       });
     });
     setEditable(false);
   };
 
-  const handleResetClick = (): void => {
+  const handleResetClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    e.stopPropagation();
     setValue(resource.value);
     setEditable(false);
   };
 
-  const handleDeleteClick = (): void => {
+  const handleDeleteClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    e.stopPropagation();
     setResources((prevResources) => {
       return prevResources.filter(
         (prevResource) => prevResource.id !== resource.id
@@ -57,10 +107,15 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper active={resource.isClicked} onClick={handleItemClick}>
       {!editable && <TextBox>{resource.value}</TextBox>}
       {editable && (
-        <Input ref={inputRef} value={value} onChange={handleChange} />
+        <Input
+          onClick={stopPropagation}
+          ref={inputRef}
+          value={value}
+          onChange={handleChange}
+        />
       )}
       <ActionButtons>
         {!editable && (
@@ -88,7 +143,7 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
 
 export default ResourceItem;
 
-const Wrapper = styled.li`
+const Wrapper = styled.li<{ active: Boolean }>`
   width: 260px;
   height: 90px;
   background-color: #fff;
@@ -97,6 +152,18 @@ const Wrapper = styled.li`
   justify-content: space-between;
   padding: 12px;
   border-radius: 10px;
+  ${({ active }) =>
+    active &&
+    `
+    border: 1px solid #38a5e1;
+    padding: 11px;
+  `}
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #38a5e1;
+    padding: 11px;
+  }
 `;
 
 const TextBox = styled.div`
