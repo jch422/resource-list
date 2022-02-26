@@ -3,22 +3,31 @@ import styled from "styled-components";
 
 interface ButtonProps {
   text: string;
+  left?: string;
+  top?: string;
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const button: React.FC<ButtonProps> = ({ text, handleClick }) => {
-  return <StyledButton onClick={handleClick}>{text}</StyledButton>;
+const button: React.FC<ButtonProps> = ({ text, left, top, handleClick }) => {
+  return (
+    <StyledButton onClick={handleClick} left={left} top={top}>
+      {text}
+    </StyledButton>
+  );
 };
 
 export default button;
 
-const StyledButton = styled.button`
-  width: 200px;
-  height: 36px;
-  padding: 5px 50px;
-  border-radius: 5px;
+const StyledButton = styled.button<{ left?: string; top?: string }>`
+  position: absolute;
+  width: 125px;
+  height: 30px;
+  left: ${({ left }) => left};
+  top: ${({ top }) => top};
+
+  background: #ffffff;
   border: 1px solid #e5e5e5;
-  background-color: #fff;
+  border-radius: 5px;
 
   &:hover {
     cursor: pointer;

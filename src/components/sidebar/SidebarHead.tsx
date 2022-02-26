@@ -24,9 +24,7 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
     setShowUrlInput((show) => !show);
   };
 
-  const handleImgClick = (): void => {
-    console.log("img 추가");
-  };
+  const handleImgClick = (): void => {};
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -57,50 +55,66 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
   };
 
   return (
-    <Wrapper>
-      <Button text="URL 추가" handleClick={handleUrlClick} />
-      <Button text="이미지 추가" handleClick={handleImgClick} />
+    <>
+      <ButtonsContainer>
+        <Button
+          text="URL 추가"
+          handleClick={handleUrlClick}
+          left="10px"
+          top="10px"
+        />
+        <Button
+          text="이미지 추가"
+          handleClick={handleImgClick}
+          left="145px"
+          top="10px"
+        />
+      </ButtonsContainer>
       {showUrlInput && (
         <InputForm onSubmit={handleSubmit}>
           <Overlay handleOverlayClick={handleUrlClick} />
           <Input ref={inputRef} />
         </InputForm>
       )}
-    </Wrapper>
+    </>
   );
 };
 
 export default SidebarHead;
 
-const Wrapper = styled.div`
-  position: relative;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  background-color: #fff;
-  -webkit-box-shadow: 0 5px 5px -5px #757575;
-  box-shadow: 0 5px 5px -5px #757575;
+const ButtonsContainer = styled.div`
+  position: absolute;
+  width: 280px;
+  height: 50px;
+  left: calc(50% - 280px / 2);
+  top: 0px;
+  background: #ffffff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const InputForm = styled.form`
   position: absolute;
-  top: 60px;
-  width: 420px;
+  width: 260px;
   height: 40px;
+  left: 10px;
+  top: 42px;
+
+  background-color: #ffffff;
   border: 1px solid #e5e5e5;
   border-radius: 5px;
-  background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const Input = styled.input`
   position: absolute;
-  width: calc(100% - 5px);
-  height: calc(100% - 5px);
+  width: 250px;
+  height: 30px;
+  left: 5px;
+  top: 5px;
+
+  background: #f7f7f7;
   border: 1px solid #38a5e1;
   border-radius: 3px;
   outline: none;
-  padding-left: 10px;
+  padding: 0px 5px;
 `;
