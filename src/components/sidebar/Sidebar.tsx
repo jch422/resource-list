@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ResourceState as Props } from "../../App";
+import { ResourceState as Props } from "../../app/App";
 import ResourceList from "./ResourceList";
 import SidebarHead from "./SidebarHead";
 
