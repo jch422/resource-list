@@ -109,7 +109,7 @@ const ResourceItem: React.FC<ItemProps> = ({
           </IconContainer>
         )}
         {editable && (
-          <IconContainer onClick={handleResetClick}>
+          <IconContainer onClick={handleResetClick} title="reset">
             <TypedIcon icon="reset_small" style={{ fontSize: "19px" }} />
           </IconContainer>
         )}
