@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 
 import { ResourceState } from "../../app/resource_presenter";
@@ -23,7 +23,7 @@ const Main: React.FC<MainProps> = ({ resource, handleActivate }) => {
   );
 };
 
-export default Main;
+export default memo(Main);
 
 const Wrapper = styled.main`
   position: absolute;

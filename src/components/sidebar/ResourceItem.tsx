@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import styled from "styled-components";
 import { TypedIcon } from "typed-design-system";
 
@@ -121,7 +121,14 @@ const ResourceItem: React.FC<ItemProps> = ({
   );
 };
 
-export default ResourceItem;
+const isSameResource = (
+  prev: Readonly<React.PropsWithChildren<ItemProps>>,
+  next: Readonly<React.PropsWithChildren<ItemProps>>
+) => {
+  return JSON.stringify(prev) === JSON.stringify(next);
+};
+
+export default memo(ResourceItem, isSameResource);
 
 const Wrapper = styled.li<{ active: Boolean }>`
   width: 260px;
