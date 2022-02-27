@@ -2,26 +2,21 @@ import React from "react";
 import styled from "styled-components";
 import { TypedIcon } from "typed-design-system";
 
-import { MainProps as MainHeadProps } from "./Main";
+import { ResourceState } from "../../app/resource_presenter";
 
-const MainHead: React.FC<MainHeadProps> = ({ resource, setResources }) => {
+interface MainHeadProps {
+  resource: ResourceState;
+  handleActivate(id: string): void;
+}
+
+const MainHead: React.FC<MainHeadProps> = ({ resource, handleActivate }) => {
   const handleClose = (): void => {
-    setResources((prevResources) => {
-      return prevResources.map((prevResource) => {
-        if (prevResource.id !== resource?.id) {
-          return prevResource;
-        }
-        return {
-          ...prevResource,
-          isClicked: false,
-        };
-      });
-    });
+    handleActivate(resource.id);
   };
 
   return (
     <Wrapper>
-      <ResourceValue>{resource?.value}</ResourceValue>
+      <ResourceValue title="viewer">{resource?.value}</ResourceValue>
       <IconContainer onClick={handleClose}>
         <TypedIcon icon="close_small" style={{ fontSize: "19px" }} />
       </IconContainer>

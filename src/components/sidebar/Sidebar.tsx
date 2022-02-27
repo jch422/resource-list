@@ -1,20 +1,34 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ResourceState as Props } from "../../app/App";
+import { ResourceState } from "../../app/resource_presenter";
 import ResourceList from "./ResourceList";
 import SidebarHead from "./SidebarHead";
 
 export interface SidebarProps {
-  resources: Props["resource"][];
-  setResources: React.Dispatch<React.SetStateAction<Props["resource"][]>>;
+  resources: ResourceState[];
+  handleAdd(value: string, type: "img" | "url"): void;
+  handleDelete(id: string): void;
+  handleEdit(id: string, value: string): void;
+  handleActivate(id: string): void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ resources, setResources }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  resources,
+  handleAdd,
+  handleDelete,
+  handleEdit,
+  handleActivate,
+}) => {
   return (
     <Aside>
-      <SidebarHead setResources={setResources} />
-      <ResourceList resources={resources} setResources={setResources} />
+      <SidebarHead handleAdd={handleAdd} />
+      <ResourceList
+        resources={resources}
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        handleActivate={handleActivate}
+      />
     </Aside>
   );
 };
@@ -28,4 +42,5 @@ const Aside = styled.aside`
   left: 0px;
   top: 0px;
   background-color: #f7f7f7;
+  border-bottom: 1px solid #e5e5e5;
 `;
