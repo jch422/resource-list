@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import styled from "styled-components";
 
 import Button from "../common/Button";
@@ -21,17 +21,20 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ handleAdd }) => {
     }
   }, [showUrlInput]);
 
-  const handleUrlClick = (): void => {
+  const handleUrlClick = useCallback((): void => {
     setShowUrlInput((show) => !show);
-  };
+  }, []);
 
-  const handleImgClick = (): void => {
+  const handleImgClick = useCallback((): void => {
     imgUploadFormRef.current?.click();
-  };
+  }, []);
 
-  const handleImgUpload = (imgFileName: string): void => {
-    handleAdd(imgFileName, "img");
-  };
+  const handleImgUpload = useCallback(
+    (imgFileName: string): void => {
+      handleAdd(imgFileName, "img");
+    },
+    [handleAdd]
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();

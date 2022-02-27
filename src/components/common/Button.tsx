@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 
 interface ButtonProps {
@@ -16,7 +16,7 @@ const button: React.FC<ButtonProps> = ({ text, left, top, handleClick }) => {
   );
 };
 
-export default button;
+export default memo(button);
 
 const StyledButton = styled.button<{ left?: string; top?: string }>`
   position: absolute;

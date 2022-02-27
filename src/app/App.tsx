@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import ResourcePresenter, { ResourceState } from "./resource_presenter";
 import Sidebar from "../components/sidebar/Sidebar";
@@ -15,21 +15,33 @@ const App: React.FC<AppProps> = ({ presenter }) => {
   const clickedResource =
     resources.filter((resource) => resource.isClicked)?.[0] || null;
 
-  const handleAdd = (value: string, type: "img" | "url"): void => {
-    presenter.add(value, type, setResources);
-  };
+  const handleAdd = useCallback(
+    (value: string, type: "img" | "url"): void => {
+      presenter.add(value, type, setResources);
+    },
+    [presenter]
+  );
 
-  const handleDelete = (id: string): void => {
-    presenter.delete(id, setResources);
-  };
+  const handleDelete = useCallback(
+    (id: string): void => {
+      presenter.delete(id, setResources);
+    },
+    [presenter]
+  );
 
-  const handleEdit = (id: string, value: string): void => {
-    presenter.edit(id, value, setResources);
-  };
+  const handleEdit = useCallback(
+    (id: string, value: string): void => {
+      presenter.edit(id, value, setResources);
+    },
+    [presenter]
+  );
 
-  const handleActivate = (id: string): void => {
-    presenter.activate(id, setResources);
-  };
+  const handleActivate = useCallback(
+    (id: string): void => {
+      presenter.activate(id, setResources);
+    },
+    [presenter]
+  );
 
   return (
     <>
