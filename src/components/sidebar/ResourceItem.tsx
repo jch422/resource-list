@@ -1,18 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-
-import { ResourceState as Props } from "../../app/App";
 import { TypedIcon } from "typed-design-system";
 
+import { ResourceState } from "../../app/resource_presenter";
 import { handleUrl } from "../../utils/url";
 import { validateImgFileName } from "../../utils/img";
 
 interface ItemProps {
-  resource: Props["resource"];
-  setResources: React.Dispatch<React.SetStateAction<Props["resource"][]>>;
+  resource: ResourceState;
+  handleDelete(id: string): void;
+  handleEdit(id: string, value: string): void;
+  handleActivate(id: string): void;
 }
 
-const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
+const ResourceItem: React.FC<ItemProps> = ({
+  resource,
+  handleDelete,
+  handleEdit,
+  handleActivate,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [editable, setEditable] = useState<Boolean>(false);
   const [value, setValue] = useState<string>(resource.value);
@@ -26,20 +32,7 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
   }, [editable]);
 
   const handleItemClick = (): void => {
-    setResources((prevResources) => {
-      return prevResources.map((prevResource) => {
-        if (prevResource.id !== resource.id) {
-          return {
-            ...prevResource,
-            isClicked: false,
-          };
-        }
-        return {
-          ...prevResource,
-          isClicked: !resource.isClicked,
-        };
-      });
-    });
+    handleActivate(resource.id);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -73,17 +66,7 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
     }
     if (!newValue) return;
 
-    setResources((prevResources) => {
-      return prevResources.map((prevResource) => {
-        if (prevResource.id !== resource.id) {
-          return prevResource;
-        }
-        return {
-          ...prevResource,
-          value: newValue,
-        };
-      });
-    });
+    handleEdit(resource.id, newValue);
     setEditable(false);
   };
 
@@ -99,32 +82,29 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ): void => {
     e.stopPropagation();
-    setResources((prevResources) => {
-      return prevResources.filter(
-        (prevResource) => prevResource.id !== resource.id
-      );
-    });
+    handleDelete(resource.id);
   };
 
   return (
-    <Wrapper active={resource.isClicked} onClick={handleItemClick}>
-      {!editable && <TextBox>{resource.value}</TextBox>}
+    <Wrapper active={resource.isClicked} onClick={handleItemClick} title="item">
+      {!editable && <TextBox title="resource-text">{resource.value}</TextBox>}
       {editable && (
         <Input
           onClick={stopPropagation}
           ref={inputRef}
           value={value}
           onChange={handleChange}
+          title="edit-input"
         />
       )}
       <ActionButtons>
         {!editable && (
-          <IconContainer onClick={handleEditClick}>
+          <IconContainer onClick={handleEditClick} title="edit">
             <TypedIcon icon="edit_small" style={{ fontSize: "19px" }} />
           </IconContainer>
         )}
         {editable && (
-          <IconContainer onClick={handleSaveClick}>
+          <IconContainer onClick={handleSaveClick} title="save">
             <TypedIcon icon="success_small_1" style={{ fontSize: "19px" }} />
           </IconContainer>
         )}
@@ -133,7 +113,7 @@ const ResourceItem: React.FC<ItemProps> = ({ resource, setResources }) => {
             <TypedIcon icon="reset_small" style={{ fontSize: "19px" }} />
           </IconContainer>
         )}
-        <IconContainer onClick={handleDeleteClick}>
+        <IconContainer onClick={handleDeleteClick} title="delete">
           <TypedIcon icon="trash_small" style={{ fontSize: "19px" }} />
         </IconContainer>
       </ActionButtons>

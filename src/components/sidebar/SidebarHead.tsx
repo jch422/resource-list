@@ -1,19 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { v4 as uuid } from "uuid";
 
-import { ResourceState as Props } from "../../app/App";
 import Button from "../common/Button";
 import Overlay from "../common/Overlay";
 import ImgUpload from "./ImgUpload";
-
 import { handleUrl } from "../../utils/url";
 
 interface SidebarHeadProps {
-  setResources: React.Dispatch<React.SetStateAction<Props["resource"][]>>;
+  handleAdd(value: string, type: "img" | "url"): void;
 }
 
-const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
+const SidebarHead: React.FC<SidebarHeadProps> = ({ handleAdd }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const imgUploadFormRef = useRef<HTMLInputElement>(null);
   const [showUrlInput, setShowUrlInput] = useState(false);
@@ -33,32 +30,14 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
   };
 
   const handleImgUpload = (imgFileName: string): void => {
-    setResources((prevResources) => {
-      const newResource: Props["resource"] = {
-        id: uuid(),
-        value: imgFileName,
-        type: "img",
-        isClicked: false,
-      };
-      return [newResource, ...prevResources];
-    });
+    handleAdd(imgFileName, "img");
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
-    const value = handleUrl(inputRef.current?.value || "");
-    if (!value) return;
-
-    setResources((prevResources) => {
-      const newResource: Props["resource"] = {
-        id: uuid(),
-        value,
-        type: "url",
-        isClicked: false,
-      };
-      return [newResource, ...prevResources];
-    });
+    const url = handleUrl(inputRef.current?.value || "");
+    if (!url) return;
+    handleAdd(url, "url");
     setShowUrlInput(false);
   };
 
@@ -81,7 +60,7 @@ const SidebarHead: React.FC<SidebarHeadProps> = ({ setResources }) => {
       {showUrlInput && (
         <InputForm onSubmit={handleSubmit}>
           <Overlay handleOverlayClick={handleUrlClick} />
-          <Input ref={inputRef} />
+          <Input ref={inputRef} title="url-input" />
         </InputForm>
       )}
       <ImgUpload handleImgUpload={handleImgUpload} ref={imgUploadFormRef} />

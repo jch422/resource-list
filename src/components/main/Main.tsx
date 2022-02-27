@@ -1,21 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ResourceState as Props } from "../../app/App";
+import { ResourceState } from "../../app/resource_presenter";
 import MainHead from "./MainHead";
 import Viewer from "./Viewer";
 
 export interface MainProps {
-  resource: Props["resource"] | null;
-  setResources: React.Dispatch<React.SetStateAction<Props["resource"][]>>;
+  resource: ResourceState | null;
+  handleActivate(id: string): void;
 }
 
-const Main: React.FC<MainProps> = ({ resource, setResources }) => {
+const Main: React.FC<MainProps> = ({ resource, handleActivate }) => {
   return (
     <Wrapper>
       {resource && (
         <>
-          <MainHead resource={resource} setResources={setResources} />
+          <MainHead resource={resource} handleActivate={handleActivate} />
           <Viewer resource={resource} />
         </>
       )}
@@ -32,5 +32,7 @@ const Wrapper = styled.main`
   left: 281px;
   top: 0px;
   background: #ffffff;
-  border-left: 1px solid #e5e5e5;
+  border: 1px solid #e5e5e5;
+  border-top: none;
+  border-left: none;
 `;

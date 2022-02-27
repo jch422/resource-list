@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { MainProps as Props } from "./Main";
+import { ResourceState } from "../../app/resource_presenter";
 
 interface ViewerProps {
-  resource: Props["resource"];
+  resource: ResourceState;
 }
 
 const Viewer: React.FC<ViewerProps> = ({ resource }) => {

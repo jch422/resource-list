@@ -2,9 +2,21 @@ import React from "react";
 import styled from "styled-components";
 import ResourceItem from "./ResourceItem";
 
-import { SidebarProps as ListProps } from "./Sidebar";
+import { ResourceState } from "../../app/resource_presenter";
 
-const ResourceList: React.FC<ListProps> = ({ resources, setResources }) => {
+interface ListProps {
+  resources: ResourceState[];
+  handleDelete(id: string): void;
+  handleEdit(id: string, value: string): void;
+  handleActivate(id: string): void;
+}
+
+const ResourceList: React.FC<ListProps> = ({
+  resources,
+  handleDelete,
+  handleEdit,
+  handleActivate,
+}) => {
   return (
     <Wrapper>
       <List>
@@ -12,7 +24,9 @@ const ResourceList: React.FC<ListProps> = ({ resources, setResources }) => {
           <ResourceItem
             key={resource.id}
             resource={resource}
-            setResources={setResources}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            handleActivate={handleActivate}
           />
         ))}
       </List>
